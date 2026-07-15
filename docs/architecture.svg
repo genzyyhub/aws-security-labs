@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 500" font-family="Segoe UI, Arial, sans-serif">
+  <defs>
+    <style>
+      .title{font-size:20px;font-weight:700;fill:#16191f}
+      .sub{font-size:12px;fill:#5f6b7a}
+      .vpc-label{font-size:13px;font-weight:700;fill:#1f6feb}
+      .subnet-label{font-size:13px;font-weight:700;fill:#16191f}
+      .cidr{font-size:12px;fill:#5f6b7a}
+      .route{font-size:11px;fill:#16191f}
+      .tag{font-size:11px;font-weight:600}
+      .allow{fill:#1a7f37;font-weight:600}
+      .deny{fill:#b42318;font-weight:600}
+    </style>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#5f6b7a"/>
+    </marker>
+  </defs>
+
+  <!-- title -->
+  <text x="30" y="34" class="title">cs-lab-vpc — network segmentation lab</text>
+  <text x="30" y="54" class="sub">Region ap-south-1 · AZ ap-south-1a</text>
+
+  <!-- Internet cloud -->
+  <ellipse cx="700" cy="110" rx="72" ry="34" fill="#eef2f6" stroke="#c3ccd8"/>
+  <text x="700" y="115" text-anchor="middle" class="route">Internet</text>
+
+  <!-- VPC box -->
+  <rect x="30" y="80" width="560" height="380" rx="10" fill="#f7fbff" stroke="#1f6feb" stroke-dasharray="6 4"/>
+  <text x="46" y="104" class="vpc-label">VPC  cs-lab-vpc</text>
+  <text x="46" y="122" class="cidr">CIDR 10.0.0.0/16</text>
+
+  <!-- Internet Gateway -->
+  <rect x="470" y="150" width="100" height="46" rx="8" fill="#e8f0fe" stroke="#1f6feb"/>
+  <text x="520" y="171" text-anchor="middle" class="tag" fill="#1f6feb">IGW</text>
+  <text x="520" y="187" text-anchor="middle" class="cidr">cs-lab-igw</text>
+  <!-- IGW to internet -->
+  <line x1="570" y1="150" x2="662" y2="122" stroke="#5f6b7a" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="662" y1="132" x2="570" y2="180" stroke="#5f6b7a" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Public subnet -->
+  <rect x="55" y="150" width="360" height="120" rx="8" fill="#eafaf0" stroke="#1a7f37"/>
+  <text x="72" y="174" class="subnet-label">Public subnet · public-1a</text>
+  <text x="72" y="192" class="cidr">10.0.1.0/24</text>
+  <rect x="72" y="205" width="326" height="48" rx="6" fill="#ffffff" stroke="#c3ccd8"/>
+  <text x="84" y="224" class="route">Route table: public-rt</text>
+  <text x="84" y="242" class="route"><tspan class="allow">0.0.0.0/0 → cs-lab-igw</tspan>  ·  10.0.0.0/16 → local</text>
+
+  <!-- public route arrow to IGW -->
+  <line x1="398" y1="229" x2="468" y2="180" stroke="#5f6b7a" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Private subnet -->
+  <rect x="55" y="300" width="360" height="120" rx="8" fill="#fdf3f2" stroke="#b42318"/>
+  <text x="72" y="324" class="subnet-label">Private subnet · private-1a</text>
+  <text x="72" y="342" class="cidr">10.0.2.0/24</text>
+  <rect x="72" y="355" width="326" height="48" rx="6" fill="#ffffff" stroke="#c3ccd8"/>
+  <text x="84" y="374" class="route">Route table: local only</text>
+  <text x="84" y="392" class="route"><tspan class="deny">no 0.0.0.0/0 route</tspan>  ·  10.0.0.0/16 → local</text>
+
+  <!-- legend -->
+  <text x="30" y="486" class="sub">A subnet is "public" only because its route table sends 0.0.0.0/0 to the IGW. Remove that route → it's private.</text>
+</svg>

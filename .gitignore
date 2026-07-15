@@ -1,0 +1,19 @@
+# ── NEVER commit AWS credentials or secrets ──────────────────────
+*.csv
+*credentials*
+*accessKeys*
+*.pem
+*.key
+.aws/
+credentials
+.env
+*.tfvars
+terraform.tfstate*
+.terraform/
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+*.swp
+.vscode/
+.idea/
