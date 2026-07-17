@@ -80,8 +80,17 @@ Free-tier safe as built (VPC, subnets, route tables, and an Internet Gateway cos
 **NAT Gateways and running EC2 instances do cost money** — delete/terminate them when you're done
 so free-tier charges don't sneak in.
 
+## Lab log
+
+- **[Lab 04 — Launch an EC2 in the public subnet](docs/lab-04-ec2-public-subnet.md)** ✅
+  Launched a `t3.micro` into `10.0.1.0/24`, hit an **SSH connection-timeout**, and traced it to a
+  **missing `0.0.0.0/0 → IGW` route** on the public subnet's route table. Fixed with a dedicated
+  public route table (private subnet left isolated), then verified SSH access + internet egress.
+  Includes the full debugging story and the security takeaways.
+
 ## What I'd do next
 
+- ✅ ~~Launch an EC2 in the public subnet and verify reachability~~ → see [Lab 04](docs/lab-04-ec2-public-subnet.md).
 - Add a **NAT Gateway** so the private subnet gets outbound-only internet.
 - Grow to a **3-tier VPC** (web / app / data subnets) across two AZs for high availability.
 - Attach a **least-privilege Security Group** and a subnet **NACL**, and test them.
