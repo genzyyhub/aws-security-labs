@@ -88,10 +88,17 @@ so free-tier charges don't sneak in.
   public route table (private subnet left isolated), then verified SSH access + internet egress.
   Includes the full debugging story and the security takeaways.
 
+- **[Lab 05 — NAT Gateway: outbound-only internet for the private subnet](docs/lab-05-nat-gateway.md)** ✅
+  Added a **NAT Gateway** (in the public subnet) and pointed `private-rt` at it (`0.0.0.0/0 → NAT`).
+  Launched a **no-public-IP** EC2 in the private subnet, connected with **SSM Session Manager**
+  (no bastion, no key, no inbound rule), and proved egress: `curl ifconfig.me` returned the NAT's
+  Elastic IP. Confirms **outbound-only** internet with **no inbound path**. Includes Mermaid diagrams
+  and the full verification.
+
 ## What I'd do next
 
 - ✅ ~~Launch an EC2 in the public subnet and verify reachability~~ → see [Lab 04](docs/lab-04-ec2-public-subnet.md).
-- Add a **NAT Gateway** so the private subnet gets outbound-only internet.
+- ✅ ~~Add a **NAT Gateway** so the private subnet gets outbound-only internet~~ → see [Lab 05](docs/lab-05-nat-gateway.md).
 - Grow to a **3-tier VPC** (web / app / data subnets) across two AZs for high availability.
 - Attach a **least-privilege Security Group** and a subnet **NACL**, and test them.
 - Reconstruct the whole thing as **Terraform** and scan it with `checkov` / `tfsec`.
