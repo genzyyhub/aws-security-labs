@@ -95,12 +95,18 @@ so free-tier charges don't sneak in.
   Elastic IP. Confirms **outbound-only** internet with **no inbound path**. Includes Mermaid diagrams
   and the full verification.
 
+- **[Lab 06 — Security Group (stateful) vs NACL (stateless)](docs/lab-06-sg-vs-nacl.md)** ✅
+  Proved the difference by building it, breaking it, and fixing it: stripped **all** outbound rules
+  off an SG and traffic still flowed (stateful); then a subnet NACL with **inbound-only** made the
+  same request **time out** until an **outbound ephemeral (1024–65535)** rule opened the return path
+  (stateless). Includes Mermaid diagrams, the ephemeral-port explanation, and a comparison table.
+
 ## What I'd do next
 
 - ✅ ~~Launch an EC2 in the public subnet and verify reachability~~ → see [Lab 04](docs/lab-04-ec2-public-subnet.md).
 - ✅ ~~Add a **NAT Gateway** so the private subnet gets outbound-only internet~~ → see [Lab 05](docs/lab-05-nat-gateway.md).
+- ✅ ~~Attach a **Security Group** and a subnet **NACL**, and test them~~ → see [Lab 06](docs/lab-06-sg-vs-nacl.md).
 - Grow to a **3-tier VPC** (web / app / data subnets) across two AZs for high availability.
-- Attach a **least-privilege Security Group** and a subnet **NACL**, and test them.
 - Reconstruct the whole thing as **Terraform** and scan it with `checkov` / `tfsec`.
 
 ---
