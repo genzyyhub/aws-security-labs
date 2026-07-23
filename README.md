@@ -101,12 +101,20 @@ so free-tier charges don't sneak in.
   same request **time out** until an **outbound ephemeral (1024–65535)** rule opened the return path
   (stateless). Includes Mermaid diagrams, the ephemeral-port explanation, and a comparison table.
 
+- **[Lab 07 — Least-privilege IAM policy + AssumeRole](docs/lab-07-least-privilege-iam.md)** ✅
+  Wrote an `EC2ReadOnlyPolicy` (Describe-only), attached it to `EC2ReadOnlyRole` behind a scoped
+  trust policy, then proved it two ways: `iam simulate-principal-policy` (on paper) and a real
+  `sts assume-role` + live API calls (`describe-instances` allowed, `s3 ls` denied). Includes the
+  policy-evaluation-order diagram (explicit deny > explicit allow > implicit deny) and the trust-vs-
+  permission-policy distinction.
+
 ## What I'd do next
 
 - ✅ ~~Launch an EC2 in the public subnet and verify reachability~~ → see [Lab 04](docs/lab-04-ec2-public-subnet.md).
 - ✅ ~~Add a **NAT Gateway** so the private subnet gets outbound-only internet~~ → see [Lab 05](docs/lab-05-nat-gateway.md).
 - ✅ ~~Attach a **Security Group** and a subnet **NACL**, and test them~~ → see [Lab 06](docs/lab-06-sg-vs-nacl.md).
-- Grow to a **3-tier VPC** (web / app / data subnets) across two AZs for high availability.
+- ✅ ~~Write + test a least-privilege IAM policy via assume-role~~ → see [Lab 07](docs/lab-07-least-privilege-iam.md).
+- Grow to a **3-tier VPC** (web / app / data subnets) across two AZs for high availability — the last piece before the Phase 2 flagship is complete.
 - Reconstruct the whole thing as **Terraform** and scan it with `checkov` / `tfsec`.
 
 ---
