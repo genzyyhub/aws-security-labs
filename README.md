@@ -108,14 +108,22 @@ so free-tier charges don't sneak in.
   policy-evaluation-order diagram (explicit deny > explicit allow > implicit deny) and the trust-vs-
   permission-policy distinction.
 
+- **[Lab 08 — 3-tier VPC (web/app/data) — Phase 2 flagship](docs/lab-08-three-tier-vpc.md)** ✅
+  Added an isolated `data` subnet (no IGW, no NAT — structurally unreachable from the internet) and
+  chained three security groups **by reference, not CIDR**: web-sg (open to the internet) → app-sg
+  (trusts only web-sg) → data-sg (trusts only app-sg). Rebuilt the NAT Gateway torn down after Lab
+  05, launched one instance per tier via SSM, and proved it live: `web→app` succeeded, `web→data`
+  was silently blocked, `app→data` succeeded — same destination, same port, only the asker changed.
+
 ## What I'd do next
 
 - ✅ ~~Launch an EC2 in the public subnet and verify reachability~~ → see [Lab 04](docs/lab-04-ec2-public-subnet.md).
 - ✅ ~~Add a **NAT Gateway** so the private subnet gets outbound-only internet~~ → see [Lab 05](docs/lab-05-nat-gateway.md).
 - ✅ ~~Attach a **Security Group** and a subnet **NACL**, and test them~~ → see [Lab 06](docs/lab-06-sg-vs-nacl.md).
 - ✅ ~~Write + test a least-privilege IAM policy via assume-role~~ → see [Lab 07](docs/lab-07-least-privilege-iam.md).
-- Grow to a **3-tier VPC** (web / app / data subnets) across two AZs for high availability — the last piece before the Phase 2 flagship is complete.
-- Reconstruct the whole thing as **Terraform** and scan it with `checkov` / `tfsec`.
+- ✅ ~~Grow to a **3-tier VPC** (web / app / data subnets) and chain security groups by reference~~ → see [Lab 08](docs/lab-08-three-tier-vpc.md).
+- Secure S3 data store (Block Public Access, bucket/resource policies, encryption, versioning) — Phase 2's remaining flagship piece.
+- Reconstruct the whole thing as **Terraform** and scan it with `checkov` / `tfsec`; extend to two AZs for real high availability.
 
 ---
 
