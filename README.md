@@ -115,6 +115,15 @@ so free-tier charges don't sneak in.
   05, launched one instance per tier via SSM, and proved it live: `web→app` succeeded, `web→data`
   was silently blocked, `app→data` succeeded — same destination, same port, only the asker changed.
 
+- **[Lab 09 — Secure S3 data store — Phase 2 closer](docs/lab-09-secure-s3-baseline.md)** ✅
+  Block Public Access (all four settings), default SSE-S3 encryption, versioning, and a two-statement
+  bucket policy denying any request over plain HTTP and any upload missing the encryption header —
+  proved with real denied and allowed `PutObject` calls, not console toggles. `aryan-admin` carries
+  full `AdministratorAccess` at the IAM level and the bucket policy still blocked the unencrypted
+  upload — a resource-based Deny overrides even an administrator identity. Includes a real caught
+  bug: versioning silently didn't apply on the first attempt, caught by reading back
+  `get-bucket-versioning` instead of trusting the command hadn't errored.
+
 ## What I'd do next
 
 - ✅ ~~Launch an EC2 in the public subnet and verify reachability~~ → see [Lab 04](docs/lab-04-ec2-public-subnet.md).
@@ -122,8 +131,8 @@ so free-tier charges don't sneak in.
 - ✅ ~~Attach a **Security Group** and a subnet **NACL**, and test them~~ → see [Lab 06](docs/lab-06-sg-vs-nacl.md).
 - ✅ ~~Write + test a least-privilege IAM policy via assume-role~~ → see [Lab 07](docs/lab-07-least-privilege-iam.md).
 - ✅ ~~Grow to a **3-tier VPC** (web / app / data subnets) and chain security groups by reference~~ → see [Lab 08](docs/lab-08-three-tier-vpc.md).
-- Secure S3 data store (Block Public Access, bucket/resource policies, encryption, versioning) — Phase 2's remaining flagship piece.
-- Reconstruct the whole thing as **Terraform** and scan it with `checkov` / `tfsec`; extend to two AZs for real high availability.
+- ✅ ~~Secure S3 data store (Block Public Access, bucket/resource policies, encryption, versioning)~~ → see [Lab 09](docs/lab-09-secure-s3-baseline.md). **Phase 2 complete.**
+- Reconstruct the whole thing as **Terraform** and scan it with `checkov` / `tfsec`; extend to two AZs for real high availability. (Phase 4.)
 
 ---
 
