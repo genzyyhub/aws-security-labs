@@ -5,7 +5,8 @@ control that turns a single compromised host into a *contained* incident instead
 breach. This repo documents the build, the security reasoning behind each decision, and how to
 verify it.
 
-**Region:** `ap-south-1` (Mumbai) · **Phase 2 lab** of a cloud-security learning track.
+**Region:** `ap-south-1` (Mumbai) for Labs 04–09 · `eu-north-1` (Stockholm) for Lab 10, which had to
+follow the CloudTrail trail's home region. **Phase 2–3 labs** of a cloud-security learning track.
 
 ---
 
@@ -124,6 +125,16 @@ so free-tier charges don't sneak in.
   bug: versioning silently didn't apply on the first attempt, caught by reading back
   `get-bucket-versioning` instead of trusting the command hadn't errored.
 
+- **[Lab 10 — CloudTrail → CloudWatch → Alarm → SNS — Phase 3 flagship](docs/lab-10-cloudtrail-alerting.md)** ✅
+  The first **detection** pipeline in this repo, not just another control. Wired an existing
+  multi-region CloudTrail into a CloudWatch log group through a least-privilege role, wrote a metric
+  filter matching root console logins, and connected an alarm to an SNS topic. **Proved live:** a
+  real root sign-in flipped the alarm `OK -> ALARM` on a datapoint of `2.0` and delivered an email —
+  the whole chain, end to end. Includes four genuine gotchas: a multi-region trail still has one
+  writable **home region**, the log group (and metric, and alarm, and topic) must all live in that
+  same region, IAM propagation lag causes a misleading `Access denied`, and **alarms don't latch** —
+  so `describe-alarm-history` is the real proof, not current state.
+
 ## What I'd do next
 
 - ✅ ~~Launch an EC2 in the public subnet and verify reachability~~ → see [Lab 04](docs/lab-04-ec2-public-subnet.md).
@@ -132,6 +143,8 @@ so free-tier charges don't sneak in.
 - ✅ ~~Write + test a least-privilege IAM policy via assume-role~~ → see [Lab 07](docs/lab-07-least-privilege-iam.md).
 - ✅ ~~Grow to a **3-tier VPC** (web / app / data subnets) and chain security groups by reference~~ → see [Lab 08](docs/lab-08-three-tier-vpc.md).
 - ✅ ~~Secure S3 data store (Block Public Access, bucket/resource policies, encryption, versioning)~~ → see [Lab 09](docs/lab-09-secure-s3-baseline.md). **Phase 2 complete.**
+- ✅ ~~Build a real detection pipeline: CloudTrail → CloudWatch Logs → metric filter → alarm → SNS~~ → see [Lab 10](docs/lab-10-cloudtrail-alerting.md). **Phase 3 flagship complete.**
+- Add **EventBridge** for event-driven routing, and pair the logging work with Security+ domain study. (Phase 3, remaining.)
 - Reconstruct the whole thing as **Terraform** and scan it with `checkov` / `tfsec`; extend to two AZs for real high availability. (Phase 4.)
 
 ---
