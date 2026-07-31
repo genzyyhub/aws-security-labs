@@ -1,12 +1,23 @@
-# aws-vpc-lab
+# aws-security-labs
 
-A hands-on AWS VPC built from scratch in the console to learn **network segmentation** — the
-control that turns a single compromised host into a *contained* incident instead of a full-estate
-breach. This repo documents the build, the security reasoning behind each decision, and how to
-verify it.
+Hands-on AWS security labs, built from scratch and **proven with real allowed/denied API calls** —
+not console screenshots. Network segmentation, least-privilege IAM, and data protection, each one
+documented with the security reasoning behind every decision and how to verify it yourself.
 
-**Region:** `ap-south-1` (Mumbai) for Labs 04–09 · `eu-north-1` (Stockholm) for Lab 10, which had to
-follow the CloudTrail trail's home region. **Phase 2–3 labs** of a cloud-security learning track.
+**Region:** `ap-south-1` (Mumbai) · **Phase 2** of an 8-month cloud-security track.
+
+> 🔭 **Detection & alerting lives in its own repo:**
+> [**cloud-logging-pipeline**](https://github.com/genzyyhub/cloud-logging-pipeline) — CloudTrail →
+> CloudWatch → metric filter → alarm → SNS, proven live with a real root-account login.
+
+---
+
+## The through-line
+
+Every lab here is a variation on one idea: **a control you can't verify isn't a control.** So each
+one is built, then deliberately broken or probed, then read back. That's how the two silent failures
+in this repo were caught — a route table that had blackholed after a teardown, and a versioning
+setting that never actually applied despite the command returning no error.
 
 ---
 
@@ -125,15 +136,13 @@ so free-tier charges don't sneak in.
   bug: versioning silently didn't apply on the first attempt, caught by reading back
   `get-bucket-versioning` instead of trusting the command hadn't errored.
 
-- **[Lab 10 — CloudTrail → CloudWatch → Alarm → SNS — Phase 3 flagship](docs/lab-10-cloudtrail-alerting.md)** ✅
-  The first **detection** pipeline in this repo, not just another control. Wired an existing
-  multi-region CloudTrail into a CloudWatch log group through a least-privilege role, wrote a metric
-  filter matching root console logins, and connected an alarm to an SNS topic. **Proved live:** a
-  real root sign-in flipped the alarm `OK -> ALARM` on a datapoint of `2.0` and delivered an email —
-  the whole chain, end to end. Includes four genuine gotchas: a multi-region trail still has one
-  writable **home region**, the log group (and metric, and alarm, and topic) must all live in that
-  same region, IAM propagation lag causes a misleading `Access denied`, and **alarms don't latch** —
-  so `describe-alarm-history` is the real proof, not current state.
+- **Lab 10 — CloudTrail → CloudWatch → Alarm → SNS** ✅ → **moved to its own repo:**
+  [**cloud-logging-pipeline**](https://github.com/genzyyhub/cloud-logging-pipeline)
+  The first *detection* pipeline — CloudTrail into CloudWatch Logs via a least-privilege role, a
+  metric filter on root console logins, alarm → SNS → inbox. Proved live: a real root sign-in flipped
+  the alarm `OK -> ALARM` on a datapoint of `2.0` and delivered an email. Split out because detection
+  and alerting is a distinct project from network/IAM/storage labs — and it keeps growing
+  (EventBridge, then GuardDuty and Security Hub).
 
 ## What I'd do next
 
@@ -143,8 +152,7 @@ so free-tier charges don't sneak in.
 - ✅ ~~Write + test a least-privilege IAM policy via assume-role~~ → see [Lab 07](docs/lab-07-least-privilege-iam.md).
 - ✅ ~~Grow to a **3-tier VPC** (web / app / data subnets) and chain security groups by reference~~ → see [Lab 08](docs/lab-08-three-tier-vpc.md).
 - ✅ ~~Secure S3 data store (Block Public Access, bucket/resource policies, encryption, versioning)~~ → see [Lab 09](docs/lab-09-secure-s3-baseline.md). **Phase 2 complete.**
-- ✅ ~~Build a real detection pipeline: CloudTrail → CloudWatch Logs → metric filter → alarm → SNS~~ → see [Lab 10](docs/lab-10-cloudtrail-alerting.md). **Phase 3 flagship complete.**
-- Add **EventBridge** for event-driven routing, and pair the logging work with Security+ domain study. (Phase 3, remaining.)
+- ✅ ~~Build a real detection pipeline: CloudTrail → CloudWatch Logs → metric filter → alarm → SNS~~ → now in [cloud-logging-pipeline](https://github.com/genzyyhub/cloud-logging-pipeline). **Phase 3 flagship complete.**
 - Reconstruct the whole thing as **Terraform** and scan it with `checkov` / `tfsec`; extend to two AZs for real high availability. (Phase 4.)
 
 ---
@@ -153,3 +161,9 @@ so free-tier charges don't sneak in.
 
 No credentials, access keys, or `.csv` exports are included in this repo — the `.gitignore` blocks
 them. Never commit AWS keys to GitHub; automated scanners find and abuse them within minutes.
+
+---
+
+**Related repos:**
+[secure-aws-account-baseline](https://github.com/genzyyhub/secure-aws-account-baseline) — taking a fresh AWS account from zero to hardened ·
+[cloud-logging-pipeline](https://github.com/genzyyhub/cloud-logging-pipeline) — CloudTrail → CloudWatch → SNS detection, proven live
