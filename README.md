@@ -49,9 +49,6 @@ VPC  cs-lab-vpc  10.0.0.0/16   (ap-south-1)
 └── Internet Gateway  cs-lab-igw  (attached to VPC)
 ```
 
-> A console screenshot of the built VPC lives at `docs/vpc-console.png`
-> (save your AWS "Your VPCs" resource-map screenshot there).
-
 ## Design decisions (the security reasoning)
 
 | Decision | Why |
