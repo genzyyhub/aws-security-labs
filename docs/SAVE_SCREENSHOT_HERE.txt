@@ -1,3 +1,0 @@
-Save your AWS console screenshot of the VPC resource map here as:
-  vpc-console.png
-The README references it at docs/vpc-console.png
